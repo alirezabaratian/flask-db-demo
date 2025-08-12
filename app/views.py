@@ -1,5 +1,7 @@
 from app import app, db
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, Response
+import psutil
+from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
 from .models import User
 from .forms import UserForm
 
@@ -80,3 +82,43 @@ def add_header(response):
 def page_not_found(error):
     """Custom 404 page."""
     return render_template('404.html'), 404
+
+
+@app.route('/metrics')
+def metrics():
+    """Expose system health metrics in Prometheus format."""
+    # Collect system metrics
+    cpu_percent = psutil.cpu_percent(interval=0.1)
+    vm = psutil.virtual_memory()
+    du = psutil.disk_usage('/')
+    
+    # Create custom metrics
+    from prometheus_client import Gauge
+    
+    # CPU usage
+    cpu_gauge = Gauge('system_cpu_percent', 'CPU utilization percentage')
+    cpu_gauge.set(cpu_percent)
+    
+    # Memory usage
+    mem_total = Gauge('system_memory_total_bytes', 'Total system memory in bytes')
+    mem_used = Gauge('system_memory_used_bytes', 'Used system memory in bytes')
+    mem_free = Gauge('system_memory_free_bytes', 'Free system memory in bytes')
+    mem_percent = Gauge('system_memory_used_percent', 'Memory utilization percentage')
+    
+    mem_total.set(vm.total)
+    mem_used.set(vm.used)
+    mem_free.set(vm.available)
+    mem_percent.set(vm.percent)
+    
+    # Disk usage
+    disk_total = Gauge('system_disk_total_bytes', 'Total disk size in bytes')
+    disk_used = Gauge('system_disk_used_bytes', 'Used disk space in bytes')
+    disk_free = Gauge('system_disk_free_bytes', 'Free disk space in bytes')
+    disk_percent = Gauge('system_disk_used_percent', 'Disk utilization percentage')
+    
+    disk_total.set(du.total)
+    disk_used.set(du.used)
+    disk_free.set(du.free)
+    disk_percent.set(du.percent)
+    
+    return Response(generate_latest(), mimetype=CONTENT_TYPE_LATEST)
