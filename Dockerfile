@@ -6,4 +6,4 @@ COPY . .
 
 RUN pip install -r requirements.txt
 
-CMD bash -c "flask db upgrade && flask --debug run"
+CMD ["bash", "-c", "flask db upgrade && exec flask --debug run"]
