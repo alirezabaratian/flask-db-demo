@@ -50,3 +50,14 @@ set DATABASE_URL="postgresql://yourusername:yourpassword@localhost/databasename"
 ### .env Files
 
 You can also create a `.env` file in the root of your project and add your Environment variables there. See `.env.sample` as an example. The `config.py` file is already setup to automatically load the `.env` file.
+
+
+## Docker
+
+Now, it is possible to run this project as a docker container
+
+- Make sure you have PostgreSQL installed on your system
+- Run the image:
+```shell
+docker run -d --network host --env-file <your-env-file> alirezabar/flask-db-demo:latest 
+```
