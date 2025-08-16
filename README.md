@@ -59,5 +59,5 @@ Now, it is possible to run this project as a docker container
 - Make sure you have PostgreSQL installed on your system
 - Run the image:
 ```shell
-docker run -d --network host --env-file <your-env-file> alirezabar/flask-db-demo:latest 
+docker run -d --name flask-db-demo --network host --env-file <your-env-file> alirezabar/flask-db-demo:latest 
 ```
