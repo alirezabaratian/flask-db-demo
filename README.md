@@ -17,8 +17,9 @@ To begin using this app you can do the following:
 3. Enter the virtual environment using `source venv/bin/activate` (or `.\venv\Scripts\activate` on Windows)
 4. Install the dependencies using Pip. e.g. `pip install -r requirements.txt`. Note: Ensure you have PostgreSQL already installed and a database created.
 5. Edit the `app/__init__.py` file and enter your database credentials and database name.
-6. Run the migrations by typing `flask db upgrade`
-7. Start the development server using `flask --debug run`.
+6. Run the password migration command with `flask db commit`
+7. Run the migrations by typing `flask db upgrade`
+8. Start the development server using `flask --debug run`.
 
 ## Separate Config file
 
