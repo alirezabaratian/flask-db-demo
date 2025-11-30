@@ -51,3 +51,7 @@ set DATABASE_URL="postgresql://yourusername:yourpassword@localhost/databasename"
 ### .env Files
 
 You can also create a `.env` file in the root of your project and add your Environment variables there. See `.env.sample` as an example. The `config.py` file is already setup to automatically load the `.env` file.
+
+
+## Prometheus Support
+We added a new /metrics path in order to expose basic system health parameters (cpu, memory, disk) for Prometheus to collect

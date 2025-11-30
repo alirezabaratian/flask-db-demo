@@ -1,7 +1,8 @@
 from app import app, db
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, Response
 from .models import User
 from .forms import UserForm
+import psutil
 
 
 ###
@@ -42,6 +43,54 @@ def new_user():
 
     flash_errors(new_user_form)
     return render_template('add_user.html', form=new_user_form)
+
+
+@app.route('/metrics')
+def metrics():
+    """Expose system health metrics in Prometheus format."""
+    metrics_output = []
+
+    # CPU metrics
+    cpu_percent = psutil.cpu_percent(interval=0.1)
+    cpu_count = psutil.cpu_count()
+    metrics_output.append('# HELP system_cpu_usage_percent Current CPU usage percentage')
+    metrics_output.append('# TYPE system_cpu_usage_percent gauge')
+    metrics_output.append(f'system_cpu_usage_percent {cpu_percent}')
+    metrics_output.append('# HELP system_cpu_count Number of CPUs')
+    metrics_output.append('# TYPE system_cpu_count gauge')
+    metrics_output.append(f'system_cpu_count {cpu_count}')
+
+    # Memory metrics
+    memory = psutil.virtual_memory()
+    metrics_output.append('# HELP system_memory_total_bytes Total memory in bytes')
+    metrics_output.append('# TYPE system_memory_total_bytes gauge')
+    metrics_output.append(f'system_memory_total_bytes {memory.total}')
+    metrics_output.append('# HELP system_memory_available_bytes Available memory in bytes')
+    metrics_output.append('# TYPE system_memory_available_bytes gauge')
+    metrics_output.append(f'system_memory_available_bytes {memory.available}')
+    metrics_output.append('# HELP system_memory_used_bytes Used memory in bytes')
+    metrics_output.append('# TYPE system_memory_used_bytes gauge')
+    metrics_output.append(f'system_memory_used_bytes {memory.used}')
+    metrics_output.append('# HELP system_memory_usage_percent Memory usage percentage')
+    metrics_output.append('# TYPE system_memory_usage_percent gauge')
+    metrics_output.append(f'system_memory_usage_percent {memory.percent}')
+
+    # Disk metrics
+    disk = psutil.disk_usage('/')
+    metrics_output.append('# HELP system_disk_total_bytes Total disk space in bytes')
+    metrics_output.append('# TYPE system_disk_total_bytes gauge')
+    metrics_output.append(f'system_disk_total_bytes {disk.total}')
+    metrics_output.append('# HELP system_disk_used_bytes Used disk space in bytes')
+    metrics_output.append('# TYPE system_disk_used_bytes gauge')
+    metrics_output.append(f'system_disk_used_bytes {disk.used}')
+    metrics_output.append('# HELP system_disk_free_bytes Free disk space in bytes')
+    metrics_output.append('# TYPE system_disk_free_bytes gauge')
+    metrics_output.append(f'system_disk_free_bytes {disk.free}')
+    metrics_output.append('# HELP system_disk_usage_percent Disk usage percentage')
+    metrics_output.append('# TYPE system_disk_usage_percent gauge')
+    metrics_output.append(f'system_disk_usage_percent {disk.percent}')
+
+    return Response('\n'.join(metrics_output) + '\n', mimetype='text/plain; version=0.0.4; charset=utf-8')
 
 
 ###
