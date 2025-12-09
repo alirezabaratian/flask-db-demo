@@ -55,3 +55,15 @@ You can also create a `.env` file in the root of your project and add your Envir
 
 ## Prometheus Support
 We added a new /metrics path in order to expose basic system health parameters (cpu, memory, disk) for Prometheus to collect
+
+## Docker Support
+
+From now on, there is a Docker image for this project.
+You can run the code just by entering the following command:
+(Note that you still need a PostgreSQL server on your host machine and your own environment variables defined)
+
+```bash
+
+docker run -d --name flask-db-demo --network host --restart always --env-file .env alirezabtn/flask-db-demo:latest
+
+```
