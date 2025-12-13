@@ -67,3 +67,11 @@ You can run the code just by entering the following command:
 docker run -d --name flask-db-demo --network host --restart always --env-file .env alirezabtn/flask-db-demo:latest
 
 ```
+
+## Docker Compose
+
+- Download the .env.sample file and rename it to .env (provide correct values)
+- Run this command:
+```bash
+docker compose up -d && docker compose logs -f app
+```

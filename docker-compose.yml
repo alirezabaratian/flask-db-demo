@@ -1,0 +1,17 @@
+services:
+  app:
+    image: alirezabtn/flask-db-demo:latest
+    ports:
+      - "${FLASK_RUN_PORT}:${FLASK_RUN_PORT}"
+    env_file:
+      - .env
+    restart: unless-stopped
+  postgres:
+    image: postgres:15
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+volumes:
+  postgres_data:
