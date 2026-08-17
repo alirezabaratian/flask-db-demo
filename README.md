@@ -2,6 +2,8 @@
 
 This is an example database app using PostgreSQL, Flask-SQLAlchemy and Flask-Migrate
 
+**Note:** You need Python 3.10 or lower to be able install the `psycopg v2.9.9` dependency. otherwise, the code cannot run.  
+
 You will need to ensure you install PostgreSQL on your computer. You can do so by installing PostgreSQL from the link below and following the instructions:
 
 <https://www.postgresql.org/download/>
